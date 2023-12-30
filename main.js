@@ -15,6 +15,20 @@ async function loadRandomMichis() {
     const img1 = document.getElementById('img1');
     const img2 = document.getElementById('img2');
     
+    const btn1 = document.getElementById('btn1');
+    const btn2 = document.getElementById('btn2');
+
+
+    //importante:
+    /* La primera forma, con la función de flecha, 
+    es más común y generalmente preferida cuando
+    asignas funciones a eventos. La segunda forma 
+    ejecutaría la función inmediatamente y asignaría 
+    su resultado al evento, lo cual puede no ser el 
+    comportamiento deseado en la mayoría de los casos. */
+    btn1.onclick = () => saveFavouritemichi(data[0].id);
+    btn2.onclick = () => saveFavouritemichi(data[1].id);
+    
     img1.src = data[0].url;
     img2.src = data[1].url;
   }
@@ -28,18 +42,36 @@ async function loadFavoritesMichis() {
 
   if (res.status !== 200) {
     spanError.innerHTML = "Hubo un error: " + res.status + data.message;
+  }else{
+    data.forEach(michi => {
+        const section = document.getElementById('favoritesMichis')
+        const article = document.createElement('article');
+        const img = document.createElement('img');
+        const btn = document.createElement('button');
+        const btnText = document.createTextNode('Sacar al michi de favoritos');
+        
+        img.width = 150;
+        img.height = 150
+        btn.appendChild(btnText);
+        img.src=michi.image.url
+        article.appendChild(img);
+        article.appendChild(btn);
+
+        section.appendChild(article)
+    }
+    );
   }
 }
 
-async function saveFavouritemichis(){
+async function saveFavouritemichi(id){
     const res = await fetch(API_URL_FAVOTITES,{
         method: 'POST',
-        headers: {
+         headers: {
             'Content-Type': 'application/json',
         },
         body:JSON.stringify({
-            image_id: "n7"
-        }),
+            image_id: id
+        }), 
     })
 
     const data= await res.json()
