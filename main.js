@@ -1,3 +1,12 @@
+//ojito: con axios 
+const api = axios.create({
+    baseURL:'https://api.thecatapi.com/v1'
+});
+api.defaults.headers.common['X-API-KEY'] = 'c08d415f-dea7-4a38-bb28-7b2188202e46';
+
+
+
+
 const API_URL_RANDOM = 'https://api.thecatapi.com/v1/images/search?limit=2';
 const API_URL_FAVOTITES = 'https://api.thecatapi.com/v1/favourites';
 const API_URL_UPLOAD = 'https://api.thecatapi.com/v1/images/upload';
@@ -79,7 +88,11 @@ async function loadFavoritesMichis() {
   }}
 
 async function saveFavouritemichi(id){
-    const res = await fetch(API_URL_FAVOTITES,{
+    const {data, status} = await api.post('/favourites',{//concatena automáticamente
+        image_id: id,
+    });
+    
+/*     const res = await fetch(API_URL_FAVOTITES,{
         method: 'POST',
          headers: {
             'Content-Type': 'application/json',
@@ -91,13 +104,13 @@ async function saveFavouritemichi(id){
         }), 
     })
 
-    const data= await res.json()
+    const data= await res.json() */
     console.log('save')
-    console.log(res)
+   // console.log(res)
     console.log(data)
-
-    if (res.status !== 200) {
-        spanError.innerHTML = "Hubo un error: " + res.status + data.message;
+  
+    if (status !== 200) {
+        spanError.innerHTML = "Hubo un error: " + status + data.message;
       }
     else{
         console.log("michi guardado en favoritos")
